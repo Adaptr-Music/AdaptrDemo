@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Adaptr",
+        "repositoryURL": "https://github.com/Adaptr-Music/iOS-SDK",
+        "state": {
+          "branch": null,
+          "revision": "44b47209c7ccbed8298673beea5cb84634de2e1d",
+          "version": "0.1.3"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
