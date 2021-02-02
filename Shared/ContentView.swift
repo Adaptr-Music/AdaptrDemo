@@ -24,8 +24,10 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List (viewModel.stations) { (station: Stations) in
+                NavigationLink(destination: StationSongsView(currentStation:station)){
                 Text(station.name)
-            }.navigationBarTitle("Stations")
+                }.navigationBarTitle("Stations")
+            }
         }
         .onAppear {
             viewModel.loadStations()
@@ -42,7 +44,8 @@ struct ContentView: View {
                     let st = item as! Station
                     stations.append(Stations(id: st.identifier, name: st.name))
                 }
-            }) { }
+            })
+            { }
         }
     }
 }
