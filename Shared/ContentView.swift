@@ -26,7 +26,7 @@ struct ContentView: View {
             List (viewModel.stations) { (station: Stations) in
                 NavigationLink(destination: StationSongsView(currentStation:station)){
                 Text(station.name)
-                }.navigationBarTitle("Stations")
+                }.navigationBarTitle("Stations").accentColor(.black)
             }
         }
         .onAppear {

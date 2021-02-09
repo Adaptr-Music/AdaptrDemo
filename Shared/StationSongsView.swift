@@ -31,8 +31,8 @@ struct StationSongsView: View {
     var body: some View {
         
             List (viewModel.songs) { (song: Songs) in
-                NavigationLink(destination: PlayerView(file:song.file)){
-                
+                NavigationLink(destination: PlayerView(file:song.file , files:viewModel.audiofiles)){
+                    
                     HStack(){
                         AsyncImage(
                            url: song.imageUrl,
@@ -45,7 +45,7 @@ struct StationSongsView: View {
                     }
                     
                 
-                }.navigationBarTitle(currentStation.name)
+                } .navigationBarTitle(currentStation.name)
             }
         .onAppear {
             if(viewModel.songs.isEmpty) {
@@ -59,15 +59,17 @@ struct StationSongsView: View {
             self.stationID = id
         }
         var stationID:String
-
+        var audiofiles:Array<Audiofile> = []
+        
         @Published private(set) var songs: [Songs] = []
-
+        
         let player:AdaptrAudioPlayer = AdaptrAudioPlayer.shared()
         func loadTracks() {
             player.whenAvailable({ [self] in
                 
                 player.requestTracks(forStation: stationID, pageNo: 0, resultsPerPage: 100) { (files:Array<Audiofile>?) in
-                    
+                    audiofiles = files ?? []
+                    player.loadAudioItems(audiofiles, withCrossfade: false)
                     for file in files! {
                         let urlSt = file.metadata["artwork150x150"] as! String
                         let url = URL(string: urlSt)
@@ -77,6 +79,7 @@ struct StationSongsView: View {
             })
             { }
         }
+        
     }
     
 }

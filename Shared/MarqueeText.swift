@@ -29,7 +29,11 @@ extension String {
 }
 
 struct MarqueeText : View {
-@State var text = ""
+    
+var text = ""
+public init(text: String) {
+    self.text = text
+}
 @State private var animate = false
     
     private let animationOne = Animation.linear(duration: 5).delay(1.0).repeatCount(2, autoreverses: false)
@@ -64,6 +68,6 @@ struct MarqueeText : View {
 
 struct MarqueeText_Previews: PreviewProvider {
     static var previews: some View {
-        MarqueeText()
+        MarqueeText(text:"")
     }
 }

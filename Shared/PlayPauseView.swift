@@ -8,6 +8,10 @@
 import SwiftUI
 import Adaptr
 
+
+/**
+ * Wrap the play pasue view in 
+ */
 struct PlayPauseView: UIViewRepresentable {
     
     var pointSize:CGFloat = 24
