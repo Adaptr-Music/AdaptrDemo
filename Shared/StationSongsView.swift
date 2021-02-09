@@ -43,14 +43,16 @@ struct StationSongsView: View {
                         
                     Text(song.name)
                     }
-                    
                 
-                } .navigationBarTitle(currentStation.name)
+                }.navigationBarTitle(currentStation.name).accentColor(.black)
             }
         .onAppear {
             if(viewModel.songs.isEmpty) {
                 viewModel.loadTracks()
             }
+        }
+        .onDisappear{
+            
         }
     }
 
@@ -66,16 +68,19 @@ struct StationSongsView: View {
         let player:AdaptrAudioPlayer = AdaptrAudioPlayer.shared()
         func loadTracks() {
             player.whenAvailable({ [self] in
-                
-                player.requestTracks(forStation: stationID, pageNo: 0, resultsPerPage: 100) { (files:Array<Audiofile>?) in
-                    audiofiles = files ?? []
-                    player.loadAudioItems(audiofiles, withCrossfade: false)
-                    for file in files! {
-                        let urlSt = file.metadata["artwork150x150"] as! String
-                        let url = URL(string: urlSt)
-                        songs.append(Songs(id:file.id, name: file.name, imageUrl: (url ??  URL(string:""))!, file: file ))
+                    player.stop()
+                    songs = []
+                    player.requestTracks(forStation: stationID, pageNo: 0, resultsPerPage: 100) { (files:Array<Audiofile>?) in
+                        player.stop()
+                        audiofiles = files ?? []
+                        songs = []
+                        
+                        for file in files! {
+                            let urlSt = file.metadata["artwork150x150"] as! String
+                            let url = URL(string: urlSt)
+                            songs.append(Songs(id:file.id, name: file.name, imageUrl: (url ??  URL(string:""))!, file: file ))
+                        }
                     }
-                }
             })
             { }
         }

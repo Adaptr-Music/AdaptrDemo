@@ -61,9 +61,12 @@ struct PlayerView: View {
                 SkipView(pointSize: 24).accentColor(.black).frame(width: 30, height: 30)
             }.frame( height: 40 ,alignment: .bottom)
             
-        }
+        }.accentColor(.black)
         .onAppear {
             self.viewModel.subscribe()
+        }
+        .onDisappear {
+            
         }
     }
     
@@ -71,16 +74,15 @@ struct PlayerView: View {
     class ViewModelSongDetail: ObservableObject {
         
         let player:AdaptrAudioPlayer = AdaptrAudioPlayer.shared()
-        var index:UInt = 0
-        //var mfile:Audiofile;
-        //var mfiles:Array<Audiofile>
+        var mfile:Audiofile;
+        var mfiles:Array<Audiofile>
         
         init(file:Audiofile, files:Array<Audiofile>) {
             let urlSt = file.metadata["artwork640"] as! String
             let url = URL(string: urlSt)
             song = Song(id: file.id, name: file.name, artist: file.artist, album: file.album , imageUrl:url! )
-            let mindex = files.firstIndex(of: file) ?? 0
-            index = UInt(mindex)
+            mfiles = files
+            mfile = file
         }
         
         @Published private(set) var song:Song
@@ -88,7 +90,10 @@ struct PlayerView: View {
         func subscribe() {
             NotificationCenter.default.addObserver( self, selector: #selector(self.itemChanged), name: NSNotification.Name.AdaptrAudioPlayerCurrentItemDidBeginPlayback, object: nil)
             NotificationCenter.default.addObserver( self, selector: #selector(self.stateChanged), name: NSNotification.Name.AdaptrAudioPlayerPlaybackStateDidChange, object: nil)
-            
+            player.stop()
+            player.loadAudioItems(mfiles, withCrossfade: false)
+            let mindex = mfiles.firstIndex(of: mfile) ?? 0
+            let index = UInt(mindex)
             player.play(from:index)
             
         }
